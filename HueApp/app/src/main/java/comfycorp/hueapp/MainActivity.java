@@ -8,9 +8,12 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
+    BridgeMiddleMan bridgeMiddleMan = BridgeMiddleMan.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bridgeMiddleMan.mContext = this.getApplicationContext();
         setContentView(R.layout.activity_main);
 
         final Button button = (Button) findViewById(R.id.navTestButton);
