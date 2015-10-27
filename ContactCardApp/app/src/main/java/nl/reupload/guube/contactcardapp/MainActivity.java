@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         i.putExtra("EMAIL", contact.email);
         i.putExtra("NATIONALITY", contact.nationality);
         i.putExtra("IMAGE", contact.imageURLHigh);
+        i.putExtra("PHONENO", contact.phoneNumber);
         startActivity(i);
     }
 

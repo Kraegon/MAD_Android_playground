@@ -34,6 +34,7 @@ public class PersonDetail extends AppCompatActivity {
         TextView contactName = (TextView) findViewById(R.id.contactNameTextView);
         TextView contactEmail = (TextView) findViewById(R.id.emailTextView);
         TextView contactNationality = (TextView) findViewById(R.id.nationalityTextView);
+        TextView contactPhoneNo = (TextView) findViewById(R.id.phoneNoTextView);
         final ImageView contactPicture = (ImageView) findViewById(R.id.imageContact);
 
         Bundle extras = getIntent().getExtras();
@@ -42,6 +43,7 @@ public class PersonDetail extends AppCompatActivity {
         contactName.setText(extras.getString("FIRSTNAME") + " " + extras.getString("SURNAME"));
         contactEmail.setText(extras.getString("EMAIL"));
         contactNationality.setText(extras.getString("NATIONALITY"));
+        contactPhoneNo.setText(extras.getString("PHONENO"));
 
         // Load image, decode it to Bitmap and return Bitmap to callback
         imageLoader.loadImage(contactPictureURL, new SimpleImageLoadingListener() {

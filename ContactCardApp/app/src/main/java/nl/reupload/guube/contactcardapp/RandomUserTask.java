@@ -124,6 +124,8 @@ public class RandomUserTask extends AsyncTask<String, Void, String> {
                 String imageurlhigh = picture.getString("large");
                 String imageurlthumbnail = picture.getString("thumbnail");
 
+                //Get phone number
+                String phoneNumber = user.getString("phone");
 
                 // Create new Person object
                 Person p = new Person();
@@ -133,7 +135,7 @@ public class RandomUserTask extends AsyncTask<String, Void, String> {
                 p.imageURLHigh = imageurlhigh;
                 p.imageURLThumbnail = imageurlthumbnail;
                 p.nationality = nationality;
-
+                p.phoneNumber = phoneNumber;
                 // call back with new person data
                 listener.onRandomUserAvailable(p);
 

@@ -65,7 +65,7 @@ public class PersonAdapter extends BaseAdapter {
             viewHolder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
             viewHolder.name = (TextView) convertView.findViewById(R.id.name);
             viewHolder.email = (TextView) convertView.findViewById(R.id.email);
-
+            viewHolder.phoneNo = (TextView) convertView.findViewById(R.id.phoneNo);
             //
             convertView.setTag(viewHolder);
         } else {
@@ -77,9 +77,10 @@ public class PersonAdapter extends BaseAdapter {
 
         viewHolder.name.setText(person.firstName + " " + person.surname);
         viewHolder.email.setText(person.email);
+        viewHolder.phoneNo.setText(person.phoneNumber);
 
-//        imageLoader.displayImage(person.imageURLThumbnail, viewHolder.imageView);
-        imageLoader.displayImage(person.imageURLHigh, viewHolder.imageView);
+        imageLoader.displayImage(person.imageURLThumbnail, viewHolder.imageView);
+//        imageLoader.displayImage(person.imageURLHigh, viewHolder.imageView);
 
         return convertView;
     }
@@ -89,5 +90,6 @@ public class PersonAdapter extends BaseAdapter {
         public ImageView imageView;
         public TextView name;
         public TextView email;
+        public TextView phoneNo;
     }
 }

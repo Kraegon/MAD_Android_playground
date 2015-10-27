@@ -30,6 +30,14 @@
             android:text="john.doe@gmail.com"
             android:id="@+id/email"
             android:textSize="@dimen/abc_text_size_medium_material" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="xx-xxx-xxx"
+            android:id="@+id/phoneNo" />
+
     </LinearLayout>
 
 </LinearLayout>

@@ -13,5 +13,5 @@ public class Person {
     public String surname;
     public String nationality;
     public String email;
-
+    public String phoneNumber;
 }
