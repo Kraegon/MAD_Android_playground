@@ -190,8 +190,9 @@ public class RandomUserTask extends AsyncTask<String, Void, String> {
         char[] charArray = inputString.toCharArray();
         int spaceIndex = 0;
         if (inputString.contains(" ")) {
-            for (int i = 0; i < charArray.length; i++) {
+            for (int i = charArray.length; i > 0; i--) {
                 if (charArray[i] == 32) spaceIndex = i;
+                break;
             }
         spaceIndex++;
         }
