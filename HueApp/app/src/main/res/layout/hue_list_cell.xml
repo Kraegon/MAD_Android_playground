@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="80dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="HueName"
+        android:id="@+id/HueNameView"
+        android:layout_marginLeft="22dp"
+        android:layout_marginStart="22dp"
+        android:layout_alignTop="@+id/quickOnOffSwitch"
+        android:layout_toRightOf="@+id/surfaceView"
+        android:layout_toEndOf="@+id/surfaceView" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="On/Off"
+        android:id="@+id/quickOnOffSwitch"
+        android:checked="false"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/HueNameView"
+        android:layout_toEndOf="@+id/HueNameView"
+        android:layout_marginLeft="39dp"
+        android:layout_marginStart="39dp" />
+
+    <SurfaceView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/surfaceView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:background="#000000" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="ID"
+        android:id="@+id/IDView"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp" />
+
+</RelativeLayout>
