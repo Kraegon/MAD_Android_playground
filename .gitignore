@@ -28,6 +28,12 @@ proguard/
 
 # Android Studio Navigation editor temp files
 .navigation/
+# Android Studio extras, courtesy of http://stackoverflow.com/questions/16736856/what-should-be-in-my-gitignore-for-an-android-studio-project
+*.iml
+.idea
+#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+.gradle
+build/
 
 ### Android Patch ###
 gen-external-apklibs
