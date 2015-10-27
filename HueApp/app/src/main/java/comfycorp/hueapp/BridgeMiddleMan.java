@@ -95,10 +95,10 @@ public class BridgeMiddleMan {
                     System.out.println("Bridge Username get: " + response.toString());
                     try {
                         if( response.getJSONObject(0).toString().contains("error") )
-                            System.out.println("Error :^(");
+                            System.out.println("Please press the link button");
                         else
-                            System.out.println(response.getJSONObject(0).getJSONObject("success")
-                                    .getString("username") + " :^)");
+                            username = response.getJSONObject(0).getJSONObject("success")
+                                    .getString("username");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
