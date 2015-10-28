@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -40,8 +42,10 @@ public class HueArrayAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final ViewHolder viewHolder;
+        final HueLight cellHue = MainActivity.hueDebugList.get(position);
+        final HueArrayAdapter adapter = this;
 
         // Create new of gebruik een al bestaande (recycled by Android)
         if(convertView == null) {
@@ -54,19 +58,27 @@ public class HueArrayAdapter extends BaseAdapter{
             viewHolder.colorDisplay = (SurfaceView) convertView.findViewById(R.id.surfaceView);
 
             convertView.setTag(viewHolder);
+
+            //Preferably I would not handle this here, but due to access restrictions I have to
+            Switch onOffSwitch= (Switch)  convertView.findViewById(R.id.quickOnOffSwitch);
+
+            onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    cellHue.isOn = isChecked;
+                    System.out.println("Ipswich");
+                    adapter.notifyDataSetChanged(); //HAHA
+                }
+            });
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
         // En nu de viewHolder invullen met de juiste persons
-        HueLight huelight = MainActivity.hueDebugList.get(position);
-
-        viewHolder.name.setText(huelight.name);
-        viewHolder.idView.setText(Integer.toString(huelight.id));
-        viewHolder.isOn.setChecked(huelight.isOn);
-        viewHolder.colorDisplay.setBackgroundColor(huelight.GetColor());
-
-//        imageLoader.displayImage(person.imageURLThumbnail, viewHolder.imageView);
+        viewHolder.name.setText(cellHue.name);
+        viewHolder.idView.setText(Integer.toString(cellHue.id));
+        viewHolder.isOn.setChecked(cellHue.isOn);
+        viewHolder.colorDisplay.setBackgroundColor(cellHue.GetColor());
 
         return convertView;
     }

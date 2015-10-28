@@ -13,8 +13,6 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
-
     BridgeMiddleMan bridgeMiddleMan = BridgeMiddleMan.getInstance();
 
     public static ArrayList<HueLight> hueDebugList; //TODO: delete me
@@ -56,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         hueDebugList.add(h3);
         hueDebugList.add(h4);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,21 +76,19 @@ public class MainActivity extends AppCompatActivity {
         final HueArrayAdapter adapter = new HueArrayAdapter(getLayoutInflater());
         huelistview.setAdapter(adapter);
 
-        huelistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        huelistview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
                 final String item = (String) parent.getItemAtPosition(position);
-                view.animate().setDuration(2000).alpha(0)
-                        .withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                System.out.println("Ooh, you touch my data. Mmm my values.");
-                                adapter.notifyDataSetChanged();
-                                view.setAlpha(1);
-                            }
-                        });
+                view.animate().setDuration(2000).alpha(0).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                        view.setAlpha(1);
+                    }
+                });
             }
         });
     }
