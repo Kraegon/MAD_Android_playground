@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
         bridgeMiddleMan.mContext = this.getApplicationContext();
         setContentView(R.layout.activity_main);
 
-        //populateHueDebugList();
         bridgeMiddleMan.getAllLamps();
 
         final Button button = (Button) findViewById(R.id.navTestButton);
