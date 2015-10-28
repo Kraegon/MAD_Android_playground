@@ -3,9 +3,7 @@ package comfycorp.hueapp;
 import android.content.Context;
 
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,8 +15,6 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.*;
 import cz.msebera.android.httpclient.entity.StringEntity;
-import cz.msebera.android.httpclient.message.BasicHeader;
-import cz.msebera.android.httpclient.protocol.HTTP;
 
 /**
  * Created by Kraegon on 27/10/2015.
