@@ -28,23 +28,23 @@ public class HueArrayAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return MainActivity.hueDebugList.size(); //TODO: Change to true
+        return BridgeMiddleMan.getInstance().lightArray.size(); //TODO: Change to true
     }
 
     @Override
     public Object getItem(int position) {
-        return MainActivity.hueDebugList.get(position);
+        return BridgeMiddleMan.getInstance().lightArray.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return MainActivity.hueDebugList.get(position).id;
+        return BridgeMiddleMan.getInstance().lightArray.get(position).id;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
-        final HueLight cellHue = MainActivity.hueDebugList.get(position);
+        final HueLight cellHue = BridgeMiddleMan.getInstance().lightArray.get(position);
         final HueArrayAdapter adapter = this;
 
         // Create new of gebruik een al bestaande (recycled by Android)
