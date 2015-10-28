@@ -105,7 +105,6 @@ public class BridgeMiddleMan {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     // called when response HTTP status is "200 OK"
-//                    System.out.println("Bridge Username get: " + response.toString());
                     try {
                         if( response.getJSONObject(0).toString().contains("error") )
                             System.out.println("Please press the link button");
@@ -136,15 +135,14 @@ public class BridgeMiddleMan {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // called when response HTTP status is "200 OK"
                 JSONArray lampIds = response.names();
-                int length = lampIds.length();
-                for (int i = 0; i < length; i++) {
-                    if (lampIds.toString().contains("\"" + Integer.toString(i) + "\""))
+                for (int i = 0; i < lampIds.length(); i++) {
                         try {
-                            lightArray.add(parseLampData(response.getJSONObject(Integer.toString(i)), i));
+                            lightArray.add(
+                                    parseLampData(response.getJSONObject(lampIds.getString(i)),
+                                    Integer.parseInt(lampIds.getString(i))));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                    else length++;
                 }
                 System.out.println("Lamps gotten");
                 fireLightsChangedEvent();
