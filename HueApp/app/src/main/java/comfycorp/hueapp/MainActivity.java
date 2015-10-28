@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //populateHueDebugList();
-        BridgeMiddleMan.getInstance().getAllLamps();
+        bridgeMiddleMan.getAllLamps();
 
         final Button button = (Button) findViewById(R.id.navTestButton);
         button.setOnClickListener(new View.OnClickListener() {
@@ -72,10 +72,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         final ListView huelistview = (ListView) findViewById(R.id.hueListView);
 
         final HueArrayAdapter adapter = new HueArrayAdapter(getLayoutInflater());
         huelistview.setAdapter(adapter);
+
+        bridgeMiddleMan.listeners.add(new BridgeMiddleMan.LightsChangedListener() {
+            @Override
+            public void onLightsChangedEvent() {
+                adapter.notifyDataSetChanged();
+            }
+        });
 
         huelistview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -86,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 view.animate().setDuration(2000).alpha(0).withEndAction(new Runnable() {
                     @Override
                     public void run() {
+                        System.out.println("Refresh from itemclick");
                         adapter.notifyDataSetChanged();
                         view.setAlpha(1);
                     }

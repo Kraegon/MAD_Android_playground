@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.*;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -24,6 +25,19 @@ import cz.msebera.android.httpclient.protocol.HTTP;
  */
 public class BridgeMiddleMan {
     private static BridgeMiddleMan ourInstance = new BridgeMiddleMan();
+    public List<LightsChangedListener> listeners = new ArrayList<LightsChangedListener>();
+
+    //Event interface & event
+    interface LightsChangedListener {
+        void onLightsChangedEvent();
+    }
+
+    private void fireLightsChangedEvent() {
+        // Notify everybody that may be interested
+        System.out.println("Doop-dee-doo");
+        for (LightsChangedListener l : listeners)
+            l.onLightsChangedEvent();
+    }
 
     public static BridgeMiddleMan getInstance() {
         return ourInstance;
@@ -132,6 +146,8 @@ public class BridgeMiddleMan {
                         }
                     else length++;
                 }
+                System.out.println("Lamps gotten");
+                fireLightsChangedEvent();
             }
         });
 

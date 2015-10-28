@@ -28,7 +28,7 @@ public class HueArrayAdapter extends BaseAdapter{
 
     @Override
     public int getCount() {
-        return BridgeMiddleMan.getInstance().lightArray.size(); //TODO: Change to true
+        return BridgeMiddleMan.getInstance().lightArray.size();
     }
 
     @Override
@@ -44,7 +44,6 @@ public class HueArrayAdapter extends BaseAdapter{
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
-        final HueLight cellHue = BridgeMiddleMan.getInstance().lightArray.get(position);
         final HueArrayAdapter adapter = this;
 
         // Create new of gebruik een al bestaande (recycled by Android)
@@ -59,22 +58,21 @@ public class HueArrayAdapter extends BaseAdapter{
 
             convertView.setTag(viewHolder);
 
-            //Preferably I would not handle this here, but due to access restrictions I have to
-            Switch onOffSwitch= (Switch)  convertView.findViewById(R.id.quickOnOffSwitch);
-
-            onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    cellHue.isOn = isChecked;
-                    System.out.println("Ipswich");
-                    adapter.notifyDataSetChanged(); //HAHA
-                }
-            });
+            //Preferably I would not handle this here, but due to access restrictions I have t
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+          viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        viewHolder.isOn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                BridgeMiddleMan.getInstance().lightArray.get(position).isOn = isChecked;
+                adapter.notifyDataSetChanged(); //HAHA
+            }
+        });
+
         // En nu de viewHolder invullen met de juiste persons
+        HueLight cellHue = BridgeMiddleMan.getInstance().lightArray.get(position);
         viewHolder.name.setText(cellHue.name);
         viewHolder.idView.setText(Integer.toString(cellHue.id));
         viewHolder.isOn.setChecked(cellHue.isOn);
