@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
     BridgeMiddleMan bridgeMiddleMan = BridgeMiddleMan.getInstance();
+    Boolean loaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Enable listener
         huelistview.setOnItemClickListener(this);
+        loaded = true;
+    }
 
+    @Override
+    protected void onResume () {
+        super.onResume();
+        if (loaded)
+            bridgeMiddleMan.getAllLamps();
     }
 
     //
