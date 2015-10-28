@@ -45,11 +45,6 @@ public class BridgeMiddleMan {
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(bridgeFinderUrl, new JsonHttpResponseHandler() {
 
-//            @Override
-//            public void onStart() {
-//                // called before request is started
-//            }
-
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 // called when response HTTP status is "200 OK"
@@ -60,17 +55,8 @@ public class BridgeMiddleMan {
                     e.printStackTrace();
                 }
             }
-
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-//                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-//            }
-
-//            @Override
-//            public void onRetry(int retryNo) {
-//                // called when request is retried
-//            }
         });
+
     }
 
     public void createUsernameHueBridge() {
@@ -113,7 +99,6 @@ public class BridgeMiddleMan {
 
     public void getAllLamps() {
         System.out.println("getAllLamps()");
-
         AsyncHttpClient client = new AsyncHttpClient();
         client.get("http://" + bridgeIp + "/api/" + username + "/lights/", new JsonHttpResponseHandler() {
 
@@ -152,6 +137,27 @@ public class BridgeMiddleMan {
 
     public void setLampState(HueLight hueLight) {
         System.out.println("setLampState()");
+
+        final StringEntity entity;
+
+        try {
+
+            entity = new StringEntity(
+                    "{\"on\":"+hueLight.isOn+"," +
+                    "\"bri\":"+hueLight.brightness+"," +
+                    "\"sat\":"+hueLight.saturation+"," +
+                    "\"hue\":"+hueLight.hue+"}"
+            );
+
+            AsyncHttpClient client = new AsyncHttpClient();
+            System.out.println(entity);
+            client.put(mContext,
+                    "http://"+bridgeIp+"/api/"+username+"/lights/"+hueLight.id+"/state", entity,
+                    "application/json", new JsonHttpResponseHandler() {});
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     public void saveBridgeSettings() {
