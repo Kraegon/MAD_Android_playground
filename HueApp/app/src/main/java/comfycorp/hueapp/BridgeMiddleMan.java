@@ -30,11 +30,10 @@ public class BridgeMiddleMan {
     }
 
     public Context mContext;
-    public String username;
+    public String username = "1f4d16f21308d5973663850e592c5c3";
     public String bridgeIp = "192.168.1.179";
-    public ArrayList<HueLight> lightArray;
+    public ArrayList<HueLight> lightArray = new ArrayList<HueLight>();
     private String bridgeFinderUrl = "https://www.meethue.com/api/nupnp";
-//    private String bridgeFinderUrl = "http://randomuser.me/api/";
     private BridgeMiddleMan() {
 
 
@@ -92,13 +91,14 @@ public class BridgeMiddleMan {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     // called when response HTTP status is "200 OK"
-                    System.out.println("Bridge Username get: " + response.toString());
+//                    System.out.println("Bridge Username get: " + response.toString());
                     try {
                         if( response.getJSONObject(0).toString().contains("error") )
                             System.out.println("Please press the link button");
                         else
                             username = response.getJSONObject(0).getJSONObject("success")
                                     .getString("username");
+                        System.out.println(username);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -114,10 +114,42 @@ public class BridgeMiddleMan {
 
     public void getAllLamps() {
         System.out.println("getAllLamps()");
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get("http://" + bridgeIp + "/api/" + username + "/lights/", new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // called when response HTTP status is "200 OK"
+                JSONArray lampIds = response.names();
+                int length = lampIds.length();
+                for (int i = 0; i < length; i++) {
+                    if (lampIds.toString().contains("\"" + Integer.toString(i) + "\""))
+                        try {
+                            lightArray.add(parseLampData(response.getJSONObject(Integer.toString(i)), i));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    else length++;
+                }
+            }
+        });
+
     }
 
-    public void parseLampData() {
+    public HueLight parseLampData(JSONObject jsonDataHue, int id) throws JSONException {
         System.out.println("parseLampData()");
+        HueLight hueLight = new HueLight();
+        JSONObject jsonHueLightState = jsonDataHue.getJSONObject("state");
+        hueLight.id = id;
+        hueLight.name = jsonDataHue.getString("name");
+        hueLight.isOn = jsonHueLightState.getBoolean("on");
+        if (jsonDataHue.getString("type").equals("Extended color light")) {
+            hueLight.hue = jsonHueLightState.getInt("hue");
+            hueLight.saturation = jsonHueLightState.getInt("sat");
+        }
+        hueLight.brightness = jsonHueLightState.getInt("bri");
+        return hueLight;
     }
 
     public void setLampState(HueLight hueLight) {
