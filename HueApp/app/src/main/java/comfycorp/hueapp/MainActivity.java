@@ -12,7 +12,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
     BridgeMiddleMan bridgeMiddleMan = BridgeMiddleMan.getInstance();
 
     @Override
@@ -44,21 +44,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        huelistview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view,
-                                    int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
-                view.animate().setDuration(2000).alpha(0).withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        System.out.println("Refresh from itemclick");
-                        adapter.notifyDataSetChanged();
-                        view.setAlpha(1);
-                    }
-                });
-            }
-        });
+        // Enable listener
+        huelistview.setOnItemClickListener(this);
+
     }
+
+    //
+    // Click on selected item in list
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent i = new Intent(getApplicationContext(), HueDetailActivity.class);
+        System.out.println("onItemClick()");
+        startActivity(i);
+    }
+
 }

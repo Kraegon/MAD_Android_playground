@@ -116,6 +116,7 @@ public class BridgeMiddleMan {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // called when response HTTP status is "200 OK"
                 JSONArray lampIds = response.names();
+                lightArray.clear();
                 for (int i = 0; i < lampIds.length(); i++) {
                         try {
                             lightArray.add(
@@ -162,7 +163,6 @@ public class BridgeMiddleMan {
             );
 
             AsyncHttpClient client = new AsyncHttpClient();
-            System.out.println(entity);
             client.put(mContext,
                     "http://"+bridgeIp+"/api/"+username+"/lights/"+hueLight.id+"/state", entity,
                     "application/json", new JsonHttpResponseHandler() {});

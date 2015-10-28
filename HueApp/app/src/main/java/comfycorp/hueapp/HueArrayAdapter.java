@@ -14,6 +14,7 @@ import android.widget.TextView;
  */
 public class HueArrayAdapter extends BaseAdapter{
     LayoutInflater mInflator;
+    BridgeMiddleMan bridgeMiddleMan = BridgeMiddleMan.getInstance();
 
     public HueArrayAdapter(LayoutInflater layoutInflater) {
         this.mInflator = layoutInflater;
@@ -59,13 +60,14 @@ public class HueArrayAdapter extends BaseAdapter{
         viewHolder.isOn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                BridgeMiddleMan.getInstance().lightArray.get(position).isOn = isChecked;
+                bridgeMiddleMan.lightArray.get(position).isOn = isChecked;
                 adapter.notifyDataSetChanged(); //HAHA
+                bridgeMiddleMan.setLampState(bridgeMiddleMan.lightArray.get(position));
             }
         });
 
         // En nu de viewHolder invullen met de juiste persons
-        HueLight cellHue = BridgeMiddleMan.getInstance().lightArray.get(position);
+        HueLight cellHue = bridgeMiddleMan.lightArray.get(position);
         viewHolder.name.setText(cellHue.name);
         viewHolder.idView.setText(Integer.toString(cellHue.id));
         viewHolder.isOn.setChecked(cellHue.isOn);
