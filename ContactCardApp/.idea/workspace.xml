@@ -36,11 +36,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/nl/reupload/guube/contactcardapp/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.48840383">
-              <caret line="35" column="8" selection-start-line="35" selection-start-column="8" selection-end-line="36" selection-end-column="53" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="49" column="50" selection-start-line="49" selection-start-column="50" selection-end-line="49" selection-end-column="50" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PersonDetail.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/nl/reupload/guube/contactcardapp/PersonDetail.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.55252385">
+              <caret line="41" column="32" selection-start-line="41" selection-start-column="8" selection-end-line="41" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -1873,8 +1883,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/nl/reupload/guube/contactcardapp/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48840383">
-          <caret line="35" column="8" selection-start-line="35" selection-start-column="8" selection-end-line="36" selection-end-column="53" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="49" column="50" selection-start-line="49" selection-start-column="50" selection-end-line="49" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/nl/reupload/guube/contactcardapp/PersonDetail.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.55252385">
+          <caret line="41" column="32" selection-start-line="41" selection-start-column="8" selection-end-line="41" selection-end-column="32" />
           <folding />
         </state>
       </provider>
