@@ -60,15 +60,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         bridgeMiddleMan.mContext = this.getApplicationContext();
         setContentView(R.layout.activity_main);
+        bridgeMiddleMan.resetBridgeSettings();
 
+        bridgeMiddleMan.connectToBridge();
         //populateHueDebugList();
-        bridgeMiddleMan.getAllLamps();
 
         final Button button = (Button) findViewById(R.id.navTestButton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent maliciousIntent = new Intent(getApplicationContext(), HueDetailActivity.class);
                 startActivity(maliciousIntent);
+
             }
         });
 
@@ -81,25 +83,34 @@ public class MainActivity extends AppCompatActivity {
         bridgeMiddleMan.listeners.add(new BridgeMiddleMan.LightsChangedListener() {
             @Override
             public void onLightsChangedEvent() {
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-        huelistview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view,
-                                    int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
-                view.animate().setDuration(2000).alpha(0).withEndAction(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println("Refresh from itemclick");
                         adapter.notifyDataSetChanged();
-                        view.setAlpha(1);
                     }
                 });
             }
         });
+
+        huelistview.setOnItemClickListener(new AdapterView.OnItemClickListener()
+
+        {
+            @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onItemClick (AdapterView < ? > parent,final View view,
+            int position, long id){
+            final String item = (String) parent.getItemAtPosition(position);
+            view.animate().setDuration(2000).alpha(0).withEndAction(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("Refresh from itemclick");
+                    adapter.notifyDataSetChanged();
+                    view.setAlpha(1);
+                }
+            });
+        }
+        }
+
+        );
+        }
     }
-}
