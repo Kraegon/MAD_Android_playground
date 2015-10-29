@@ -25,8 +25,7 @@ public class HueDetailActivity  extends FragmentActivity implements SeekBar.OnSe
     SurfaceView colorDisplay;
     Boolean isIndividualLight;
 
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hue_details);
 

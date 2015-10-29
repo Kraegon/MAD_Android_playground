@@ -12,7 +12,7 @@ import android.widget.TextView;
 /**
  * Created by Kraegon on 27/10/2015.
  */
-public class HueArrayAdapter extends BaseAdapter{
+public class HueArrayAdapter extends BaseAdapter {
     LayoutInflater mInflator;
     BridgeMiddleMan bridgeMiddleMan = BridgeMiddleMan.getInstance();
 
@@ -41,7 +41,7 @@ public class HueArrayAdapter extends BaseAdapter{
         final HueArrayAdapter adapter = this;
 
         // Create new of gebruik een al bestaande (recycled by Android)
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = mInflator.inflate(R.layout.hue_list_cell, null);
 
             viewHolder = new ViewHolder();
@@ -54,7 +54,7 @@ public class HueArrayAdapter extends BaseAdapter{
 
             //Preferably I would not handle this here, but due to access restrictions I have t
         } else {
-          viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
         viewHolder.isOn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

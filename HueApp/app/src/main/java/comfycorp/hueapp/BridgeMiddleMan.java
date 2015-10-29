@@ -43,7 +43,7 @@ public class BridgeMiddleMan {
             l.onLightsChangedEvent();
     }
 
-    public enum ActionThreadType{
+    public enum ActionThreadType {
         THREAD_TYPE_SYNC,
         THREAD_TYPE_ASYNC
     }
@@ -87,8 +87,8 @@ public class BridgeMiddleMan {
         }
     }
 
-    private void startNewUsernameRequestThread(){
-        if(username.isEmpty()) {
+    private void startNewUsernameRequestThread() {
+        if (username.isEmpty()) {
             ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
             Runnable task = new Runnable() {
                 public void run() {
@@ -115,13 +115,13 @@ public class BridgeMiddleMan {
                 try {
                     JSONObject unwrapped = response.getJSONObject(0);
                     try {
-                        if(unwrapped.getJSONObject("error").getInt("type") == 101) {
+                        if (unwrapped.getJSONObject("error").getInt("type") == 101) {
                             System.out.println("Please press the link button");
                         }
                     } catch (JSONException e) {
-                        if(e.getMessage().equals("No value for error")) {
+                        if (e.getMessage().equals("No value for error")) {
                             username = response.getJSONObject(0).getJSONObject("success")
-                                    .getString("username");
+                                       .getString("username");
                         }
                     }
                 } catch (JSONException e) {
@@ -134,7 +134,7 @@ public class BridgeMiddleMan {
 
         try {
             entity = new StringEntity("{\"devicetype\":\"HueApp#ComfyCrew\"}");
-            if(ActionThreadType.THREAD_TYPE_ASYNC == threadType){
+            if (ActionThreadType.THREAD_TYPE_ASYNC == threadType) {
                 AsyncHttpClient client = new AsyncHttpClient();
                 client.post(mContext, "http://" + bridgeIp + "/api/", entity, "application/json", action);
             } else {
@@ -159,8 +159,8 @@ public class BridgeMiddleMan {
                 for (int i = 0; i < lampIds.length(); i++) {
                     try {
                         lightArray.add(
-                                parseLampData(response.getJSONObject(lampIds.getString(i)),
-                                        Integer.parseInt(lampIds.getString(i))));
+                            parseLampData(response.getJSONObject(lampIds.getString(i)),
+                                          Integer.parseInt(lampIds.getString(i))));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -169,7 +169,7 @@ public class BridgeMiddleMan {
                 fireLightsChangedEvent();
             }
         };
-        if(ActionThreadType.THREAD_TYPE_ASYNC == threadType) {
+        if (ActionThreadType.THREAD_TYPE_ASYNC == threadType) {
             AsyncHttpClient client = new AsyncHttpClient();
             client.get("http://" + bridgeIp + "/api/" + username + "/lights/", action);
         }  else {
@@ -196,7 +196,7 @@ public class BridgeMiddleMan {
     public void getAllLampGroups(ActionThreadType threadType) {
         System.out.println("getAllLampGroups()");
         JsonHttpResponseHandler action =  new JsonHttpResponseHandler() {
-             @Override
+            @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // called when response HTTP status is "200 OK"
                 JSONArray lampGroupIds = response.names();
@@ -204,8 +204,8 @@ public class BridgeMiddleMan {
                 for (int i = 0; i < lampGroupIds.length(); i++) {
                     try {
                         lightsGroupArray.add(
-                                parseGroupData(response.getJSONObject(lampGroupIds.getString(i)),
-                                        Integer.parseInt(lampGroupIds.getString(i))));
+                            parseGroupData(response.getJSONObject(lampGroupIds.getString(i)),
+                                           Integer.parseInt(lampGroupIds.getString(i))));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -215,12 +215,12 @@ public class BridgeMiddleMan {
                 fireLightsChangedEvent();
             }
         };
-        if(ActionThreadType.THREAD_TYPE_ASYNC == threadType) {
+        if (ActionThreadType.THREAD_TYPE_ASYNC == threadType) {
             AsyncHttpClient client = new AsyncHttpClient();
-            client.get("http://" + bridgeIp + "/api/" + username + "/groups/",action);
-            }  else {
+            client.get("http://" + bridgeIp + "/api/" + username + "/groups/", action);
+        }  else {
             SyncHttpClient client = new SyncHttpClient();
-            client.get("http://" + bridgeIp + "/api/" + username + "/groups/",action);
+            client.get("http://" + bridgeIp + "/api/" + username + "/groups/", action);
         }
     }
 
@@ -245,16 +245,16 @@ public class BridgeMiddleMan {
         try {
 
             entity = new StringEntity(
-                    "{\"on\":"+hueLight.isOn+"," +
-                    "\"bri\":"+hueLight.brightness+"," +
-                    "\"sat\":"+hueLight.saturation+"," +
-                    "\"hue\":"+hueLight.hue+"}"
+                "{\"on\":" + hueLight.isOn + "," +
+                "\"bri\":" + hueLight.brightness + "," +
+                "\"sat\":" + hueLight.saturation + "," +
+                "\"hue\":" + hueLight.hue + "}"
             );
 
             AsyncHttpClient client = new AsyncHttpClient();
             client.put(mContext,
-                    "http://"+bridgeIp+"/api/"+username+"/lights/"+hueLight.id+"/state", entity,
-                    "application/json", new JsonHttpResponseHandler() {});
+                       "http://" + bridgeIp + "/api/" + username + "/lights/" + hueLight.id + "/state", entity,
+            "application/json", new JsonHttpResponseHandler() {});
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -269,16 +269,16 @@ public class BridgeMiddleMan {
         try {
 
             entity = new StringEntity(
-                    "{\"on\":"+hueLight.isOn+"," +
-                            "\"bri\":"+hueLight.brightness+"," +
-                            "\"sat\":"+hueLight.saturation+"," +
-                            "\"hue\":"+hueLight.hue+"}"
+                "{\"on\":" + hueLight.isOn + "," +
+                "\"bri\":" + hueLight.brightness + "," +
+                "\"sat\":" + hueLight.saturation + "," +
+                "\"hue\":" + hueLight.hue + "}"
             );
 
             AsyncHttpClient client = new AsyncHttpClient();
             client.put(mContext,
-                    "http://"+bridgeIp+"/api/"+username+"/groups/"+hueLight.id+"/action", entity,
-                    "application/json", new JsonHttpResponseHandler() {});
+                       "http://" + bridgeIp + "/api/" + username + "/groups/" + hueLight.id + "/action", entity,
+            "application/json", new JsonHttpResponseHandler() {});
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -294,13 +294,13 @@ public class BridgeMiddleMan {
         settingsEditor.apply();
     }
 
-    public void loadBridgeSettings(){
+    public void loadBridgeSettings() {
         System.out.println("loadBridgeSettings()");
         SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME, 0);
         bridgeIp = settings.getString("bridgeIp", "");
         username = settings.getString("bridgeUsername", "");
         System.out.println("ALL DATA: " + settings.getAll());
-        System.out.println("Loaded: "+username+" and "+bridgeIp+".");
+        System.out.println("Loaded: " + username + " and " + bridgeIp + ".");
     }
 
     public void resetBridgeSettings() {
@@ -311,12 +311,12 @@ public class BridgeMiddleMan {
         settingsEditor.commit();
     }
 
-    public void connectToBridge(){
+    public void connectToBridge() {
         loadBridgeSettings();
-        if(bridgeIp.isEmpty()) {
+        if (bridgeIp.isEmpty()) {
             findAndSetBridgeIp(ActionThreadType.THREAD_TYPE_ASYNC);
             System.out.println("Display getting bridge dialog");
-        } else if(username.isEmpty()) {
+        } else if (username.isEmpty()) {
             startNewUsernameRequestThread();
             System.out.println("Display getting username dialog/request link button press");
         } else {
