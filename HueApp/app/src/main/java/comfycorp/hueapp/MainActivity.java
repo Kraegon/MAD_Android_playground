@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     BridgeMiddleMan bridgeMiddleMan = BridgeMiddleMan.getInstance();
     Boolean loaded = false;
     Boolean lampsVisible = true;
@@ -21,8 +21,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         bridgeMiddleMan.mContext = this.getApplicationContext();
         setContentView(R.layout.activity_main);
-        bridgeMiddleMan.resetBridgeSettings();
-
         bridgeMiddleMan.connectToBridge();
         final ListView huelistview = (ListView) findViewById(R.id.hueListView);
 
@@ -88,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         i.putExtra("ISINDIVIDUALLIGHT", lampsVisible);
         startActivity(i);
     }
-    
+
     public void onClick(View v) {
         final ListView huelistview = (ListView) findViewById(R.id.hueListView);
         final Button toggleButton = (Button) findViewById(R.id.buttonViewLightGroups);
@@ -96,8 +94,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             final HueGroupArrayAdapter adapter = new HueGroupArrayAdapter(getLayoutInflater());
             huelistview.setAdapter(adapter);
             toggleButton.setText("Show individual lights");
-        }
-        else {
+        } else {
             final HueArrayAdapter adapter = new HueArrayAdapter(getLayoutInflater());
             huelistview.setAdapter(adapter);
             toggleButton.setText("Show light groups");

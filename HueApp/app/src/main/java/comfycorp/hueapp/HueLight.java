@@ -15,8 +15,7 @@ public class HueLight {
     public int saturation;
     public int brightness;
 
-    public int GetColor()
-    {
+    public int GetColor() {
         if (isOn) {
             float[] hsb = new float[3]; //We say brightness instead of value
             hsb[0] = (hue / 65535.0f) * 360f;
@@ -24,7 +23,7 @@ public class HueLight {
             hsb[2] = brightness / 255.0f;
             System.out.println("Colour in RGB: " + Color.HSVToColor(hsb));
             return Color.HSVToColor(hsb);
-        } else{
+        } else {
             return Color.GRAY;
         }
     }

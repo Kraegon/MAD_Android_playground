@@ -12,7 +12,7 @@ import android.widget.TextView;
 /**
  * Created by Guube on 29/10/2015.
  */
-public class HueGroupArrayAdapter extends BaseAdapter{
+public class HueGroupArrayAdapter extends BaseAdapter {
     LayoutInflater mInflator;
     BridgeMiddleMan bridgeMiddleMan = BridgeMiddleMan.getInstance();
 
@@ -41,7 +41,7 @@ public class HueGroupArrayAdapter extends BaseAdapter{
         final HueGroupArrayAdapter adapter = this;
 
         // Create new of gebruik een al bestaande (recycled by Android)
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = mInflator.inflate(R.layout.hue_list_cell, null);
 
             viewHolder = new ViewHolder();
