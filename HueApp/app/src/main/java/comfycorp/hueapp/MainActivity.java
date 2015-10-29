@@ -12,6 +12,7 @@ import android.widget.ListView;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
     BridgeMiddleMan bridgeMiddleMan = BridgeMiddleMan.getInstance();
     Boolean loaded = false;
+    Boolean lampsVisible = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
 
         bridgeMiddleMan.getAllLamps();
+        bridgeMiddleMan.getAllLampGroups();
 
         final ListView huelistview = (ListView) findViewById(R.id.hueListView);
 
@@ -41,8 +43,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume () {
         super.onResume();
-        if (loaded)
+        if (loaded) {
             bridgeMiddleMan.getAllLamps();
+            bridgeMiddleMan.getAllLampGroups();
+        }
     }
 
     //
@@ -50,14 +54,36 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent i = new Intent(getApplicationContext(), HueDetailActivity.class);
-        HueLight hueLight = bridgeMiddleMan.lightArray.get(position);
+        HueLight hueLight;
+        if (lampsVisible)
+            hueLight = bridgeMiddleMan.lightArray.get(position);
+        else
+            hueLight = bridgeMiddleMan.lightsGroupArray.get(position);
+
         i.putExtra("ID", hueLight.id);
         i.putExtra("ISON", hueLight.isOn);
         i.putExtra("NAME", hueLight.name);
         i.putExtra("HUE", hueLight.hue);
         i.putExtra("SATURATION", hueLight.saturation);
         i.putExtra("BRIGHTNESS", hueLight.brightness);
+        i.putExtra("ISINDIVIDUALLIGHT", lampsVisible);
         startActivity(i);
+    }
+
+    public void onClick(View v) {
+        final ListView huelistview = (ListView) findViewById(R.id.hueListView);
+        final Button toggleButton = (Button) findViewById(R.id.buttonViewLightGroups);
+        if (lampsVisible) {
+            final HueGroupArrayAdapter adapter = new HueGroupArrayAdapter(getLayoutInflater());
+            huelistview.setAdapter(adapter);
+            toggleButton.setText("Show individual lights");
+        }
+        else {
+            final HueArrayAdapter adapter = new HueArrayAdapter(getLayoutInflater());
+            huelistview.setAdapter(adapter);
+            toggleButton.setText("Show light groups");
+        }
+        lampsVisible = !lampsVisible;
     }
 
 }

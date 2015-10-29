@@ -23,6 +23,7 @@ public class HueDetailActivity  extends FragmentActivity implements SeekBar.OnSe
     SeekBar seekBarSaturation;
     SeekBar seekBarBrightness;
     SurfaceView colorDisplay;
+    Boolean isIndividualLight;
 
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -37,6 +38,7 @@ public class HueDetailActivity  extends FragmentActivity implements SeekBar.OnSe
         selectedHueLight.saturation = extras.getInt("SATURATION");
         selectedHueLight.brightness = extras.getInt("BRIGHTNESS");
         selectedHueLight.isOn = extras.getBoolean("ISON");
+        isIndividualLight = extras.getBoolean("ISINDIVIDUALLIGHT");
 
         labelName = (TextView) findViewById(R.id.textViewName);
         labelId = (TextView) findViewById(R.id.textViewId);
@@ -85,6 +87,18 @@ public class HueDetailActivity  extends FragmentActivity implements SeekBar.OnSe
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        bridgeMiddleMan.setLampState(selectedHueLight);
+        if (isIndividualLight)
+            bridgeMiddleMan.setLampState(selectedHueLight);
+        else
+            bridgeMiddleMan.setLampsGroupState(selectedHueLight);
+    }
+
+    public void onClick (View v) {
+        selectedHueLight.isOn = !selectedHueLight.isOn;
+        if (isIndividualLight)
+            bridgeMiddleMan.setLampState(selectedHueLight);
+        else
+            bridgeMiddleMan.setLampsGroupState(selectedHueLight);
+        updateView();
     }
 }

@@ -43,6 +43,7 @@ public class BridgeMiddleMan {
     public String username = "1f4d16f21308d5973663850e592c5c3";
     public String bridgeIp = "192.168.1.179";
     public ArrayList<HueLight> lightArray = new ArrayList<HueLight>();
+    public ArrayList<HueLight> lightsGroupArray = new ArrayList<HueLight>();
     private String bridgeFinderUrl = "https://www.meethue.com/api/nupnp";
     private BridgeMiddleMan() {
 
@@ -130,7 +131,6 @@ public class BridgeMiddleMan {
                 fireLightsChangedEvent();
             }
         });
-
     }
 
     public HueLight parseLampData(JSONObject jsonDataHue, int id) throws JSONException {
@@ -146,6 +146,45 @@ public class BridgeMiddleMan {
         }
         hueLight.brightness = jsonHueLightState.getInt("bri");
         return hueLight;
+    }
+
+    public void getAllLampGroups() {
+        System.out.println("getAllLampGroups()");
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get("http://" + bridgeIp + "/api/" + username + "/groups/", new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // called when response HTTP status is "200 OK"
+                JSONArray lampGroupIds = response.names();
+                lightsGroupArray.clear();
+                for (int i = 0; i < lampGroupIds.length(); i++) {
+                    try {
+                        lightsGroupArray.add(
+                                parseGroupData(response.getJSONObject(lampGroupIds.getString(i)),
+                                        Integer.parseInt(lampGroupIds.getString(i))));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(response.toString());
+                }
+                System.out.println("Lamp groups gotten");
+                fireLightsChangedEvent();
+            }
+        });
+    }
+
+    public HueLight parseGroupData(JSONObject jsonDataHue, int id) throws JSONException {
+        System.out.println("parseLampData()");
+        HueLight hueLightsGroup = new HueLight();
+        JSONObject jsonHueLightState = jsonDataHue.getJSONObject("action");
+        hueLightsGroup.id = id;
+        hueLightsGroup.name = jsonDataHue.getString("name");
+        hueLightsGroup.isOn = jsonHueLightState.getBoolean("on");
+        hueLightsGroup.hue = jsonHueLightState.getInt("hue");
+        hueLightsGroup.saturation = jsonHueLightState.getInt("sat");
+        hueLightsGroup.brightness = jsonHueLightState.getInt("bri");
+        return hueLightsGroup;
     }
 
     public void setLampState(HueLight hueLight) {
@@ -165,6 +204,30 @@ public class BridgeMiddleMan {
             AsyncHttpClient client = new AsyncHttpClient();
             client.put(mContext,
                     "http://"+bridgeIp+"/api/"+username+"/lights/"+hueLight.id+"/state", entity,
+                    "application/json", new JsonHttpResponseHandler() {});
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setLampsGroupState(HueLight hueLight) {
+        System.out.println("setLampState()");
+
+        final StringEntity entity;
+
+        try {
+
+            entity = new StringEntity(
+                    "{\"on\":"+hueLight.isOn+"," +
+                            "\"bri\":"+hueLight.brightness+"," +
+                            "\"sat\":"+hueLight.saturation+"," +
+                            "\"hue\":"+hueLight.hue+"}"
+            );
+
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.put(mContext,
+                    "http://"+bridgeIp+"/api/"+username+"/groups/"+hueLight.id+"/action", entity,
                     "application/json", new JsonHttpResponseHandler() {});
 
         } catch (UnsupportedEncodingException e) {
