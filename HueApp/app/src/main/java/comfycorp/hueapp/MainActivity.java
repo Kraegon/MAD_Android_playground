@@ -1,5 +1,6 @@
 package comfycorp.hueapp;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,19 +14,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     BridgeMiddleMan bridgeMiddleMan = BridgeMiddleMan.getInstance();
     Boolean loaded = false;
     Boolean lampsVisible = true;
+    AlertDialog dialogUserPrompt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bridgeMiddleMan.mContext = this.getApplicationContext();
         setContentView(R.layout.activity_main);
+        bridgeMiddleMan.resetBridgeSettings();
+
         bridgeMiddleMan.connectToBridge();
         final ListView huelistview = (ListView) findViewById(R.id.hueListView);
 
         final HueArrayAdapter adapter = new HueArrayAdapter(getLayoutInflater());
         huelistview.setAdapter(adapter);
 
-        bridgeMiddleMan.listeners.add(new BridgeMiddleMan.LightsChangedListener() {
+        bridgeMiddleMan.lightsListeners.add(new BridgeMiddleMan.LightsChangedListener() {
             @Override
             public void onLightsChangedEvent() {
                 runOnUiThread(new Runnable() {
@@ -34,6 +38,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         adapter.notifyDataSetChanged();
                     }
                 });
+            }
+        });
+
+        bridgeMiddleMan.promptListeners.add(new BridgeMiddleMan.PromptLinkBtnListener() {
+            @Override
+            public void onPromptLinkBtnEvent() {
+                DialogCreateBridgeSetup();
+            }
+        });
+        bridgeMiddleMan.successListeners.add(new BridgeMiddleMan.LinkSuccessListener() {
+            @Override
+            public void onLinkSuccessEvent() {
+                DialogDestroy();
             }
         });
 
@@ -88,4 +105,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         lampsVisible = !lampsVisible;
     }
 
+    public void DialogCreateBridgeSetup()
+    {
+        System.out.println("DialogCreateBridgeSetup()");
+        if(dialogUserPrompt == null) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setCancelable(false);
+            alertDialogBuilder.setMessage("Please press the link button now.");
+            dialogUserPrompt = alertDialogBuilder.create();
+            dialogUserPrompt.show();
+        }
+    }
+
+    public void DialogDestroy()
+    {
+        dialogUserPrompt.dismiss();
+        dialogUserPrompt = null;
+    }
 }

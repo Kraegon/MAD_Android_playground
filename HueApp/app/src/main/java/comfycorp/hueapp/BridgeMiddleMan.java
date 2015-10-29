@@ -30,17 +30,40 @@ public class BridgeMiddleMan {
     private static final String PREFS_NAME = "comfycorp.hueapp.HueBridgePreferences";
 
     private static BridgeMiddleMan ourInstance = new BridgeMiddleMan();
-    public List<LightsChangedListener> listeners = new ArrayList<>();
+    public List<LightsChangedListener> lightsListeners = new ArrayList<>();
+    public List<PromptLinkBtnListener> promptListeners = new ArrayList<>();
+    public List<LinkSuccessListener> successListeners = new ArrayList<>();
 
-    //Event interface & event
+
+    //Event interfaces & events
     interface LightsChangedListener {
         void onLightsChangedEvent();
     }
 
+    interface PromptLinkBtnListener {
+        void onPromptLinkBtnEvent();
+    }
+
+    interface LinkSuccessListener {
+        void onLinkSuccessEvent();
+    }
+
     private void fireLightsChangedEvent() {
         // Notify everybody that may be interested
-        for (LightsChangedListener l : listeners)
+        for (LightsChangedListener l : lightsListeners)
             l.onLightsChangedEvent();
+    }
+
+    private void firePromptLinkBtnEvent() {
+        // Notify everybody that may be interested
+        for(PromptLinkBtnListener l : promptListeners)
+            l.onPromptLinkBtnEvent();
+    }
+
+    private void fireOnLinkSuccessEvent() {
+        // Notify everybody that may be interested
+        for(LinkSuccessListener l : successListeners)
+            l.onLinkSuccessEvent();
     }
 
     public enum ActionThreadType{
@@ -89,6 +112,7 @@ public class BridgeMiddleMan {
 
     private void startNewUsernameRequestThread(){
         if(username.isEmpty()) {
+            firePromptLinkBtnEvent();
             ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
             Runnable task = new Runnable() {
                 public void run() {
@@ -102,6 +126,7 @@ public class BridgeMiddleMan {
             saveBridgeSettings();
             getAllLamps(ActionThreadType.THREAD_TYPE_SYNC);
             getAllLampGroups(ActionThreadType.THREAD_TYPE_SYNC);
+            fireOnLinkSuccessEvent();
         }
     }
 
