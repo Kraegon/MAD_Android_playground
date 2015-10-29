@@ -37,6 +37,7 @@ public class HueDetailActivity  extends FragmentActivity implements SeekBar.OnSe
         selectedHueLight.saturation = extras.getInt("SATURATION");
         selectedHueLight.brightness = extras.getInt("BRIGHTNESS");
         selectedHueLight.isOn = extras.getBoolean("ISON");
+        selectedHueLight.isLoopingColor = extras.getBoolean("ISLOOPINGCOLOR");
         isIndividualLight = extras.getBoolean("ISINDIVIDUALLIGHT");
 
         labelName = (TextView) findViewById(R.id.textViewName);
@@ -92,7 +93,7 @@ public class HueDetailActivity  extends FragmentActivity implements SeekBar.OnSe
             bridgeMiddleMan.setLampsGroupState(selectedHueLight);
     }
 
-    public void onClick (View v) {
+    public void onClickToggleOn (View v) {
         selectedHueLight.isOn = !selectedHueLight.isOn;
         if (isIndividualLight)
             bridgeMiddleMan.setLampState(selectedHueLight);
@@ -100,4 +101,15 @@ public class HueDetailActivity  extends FragmentActivity implements SeekBar.OnSe
             bridgeMiddleMan.setLampsGroupState(selectedHueLight);
         updateView();
     }
+
+    public void onClickToggleColorLoop (View v) {
+        selectedHueLight.isLoopingColor = !selectedHueLight.isLoopingColor;
+        if (isIndividualLight)
+            bridgeMiddleMan.setLampState(selectedHueLight);
+        else
+            bridgeMiddleMan.setLampsGroupState(selectedHueLight);
+        updateView();
+    }
+
+
 }

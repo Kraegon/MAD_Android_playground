@@ -10,7 +10,7 @@
         android:id="@+id/surfaceViewColor"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.25"
-        android:onClick="onClick" />
+        android:onClick="onClickToggleOn" />
 
     <TextView
         android:layout_width="wrap_content"

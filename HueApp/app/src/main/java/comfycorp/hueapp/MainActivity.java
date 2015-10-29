@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         i.putExtra("ISON", hueLight.isOn);
         i.putExtra("NAME", hueLight.name);
         i.putExtra("HUE", hueLight.hue);
+        i.putExtra("ISLOOPINGCOLOR", hueLight.isLoopingColor);
         i.putExtra("SATURATION", hueLight.saturation);
         i.putExtra("BRIGHTNESS", hueLight.brightness);
         i.putExtra("ISINDIVIDUALLIGHT", lampsVisible);

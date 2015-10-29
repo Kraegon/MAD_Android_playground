@@ -14,6 +14,7 @@ public class HueLight {
     public int hue;
     public int saturation;
     public int brightness;
+    public boolean isLoopingColor;
 
     public int GetColor() {
         if (isOn) {
