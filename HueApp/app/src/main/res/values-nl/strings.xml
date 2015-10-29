@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Hue app</string>
+    <string name="hue">Tint</string>
+    <string name="saturation">Verzadiging</string>
+    <string name="brightness">Helderheid</string>
+    <string name="changeButtonA">Toon lamp groepen</string>
+    <string name="changeButtonB">Toon individuele lampen</string>
+    <string name="userPromptBridge">Druk op de link knop.</string>
+</resources>

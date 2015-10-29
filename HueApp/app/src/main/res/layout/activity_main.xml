@@ -18,7 +18,7 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show Light Groups"
+        android:text="@string/changeButtonA"
         android:id="@+id/buttonViewLightGroups"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"

@@ -93,11 +93,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (lampsVisible) {
             final HueGroupArrayAdapter adapter = new HueGroupArrayAdapter(getLayoutInflater());
             huelistview.setAdapter(adapter);
-            toggleButton.setText("Show individual lights");
+            toggleButton.setText(getString(R.string.changeButtonB));
         } else {
             final HueArrayAdapter adapter = new HueArrayAdapter(getLayoutInflater());
             huelistview.setAdapter(adapter);
-            toggleButton.setText("Show light groups");
+            toggleButton.setText(getString(R.string.changeButtonA));
         }
         lampsVisible = !lampsVisible;
     }
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if(dialogUserPrompt == null) {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
             alertDialogBuilder.setCancelable(false);
-            alertDialogBuilder.setMessage("Please press the link button now.");
+            alertDialogBuilder.setMessage(getString(R.string.userPromptBridge));
             dialogUserPrompt = alertDialogBuilder.create();
             dialogUserPrompt.show();
         }

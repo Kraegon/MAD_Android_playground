@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Hue"
+        android:text="@string/hue"
         android:id="@+id/textView3" />
 
     <SeekBar
@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Saturation"
+        android:text="@string/saturation"
         android:id="@+id/textView4" />
 
     <SeekBar
@@ -67,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Brightness"
+        android:text="@string/brightness"
         android:id="@+id/textView5" />
 
     <SeekBar

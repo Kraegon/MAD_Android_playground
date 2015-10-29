@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">HueApp</string>
+    <string name="app_name">Hue app</string>
+    <string name="hue">Hue</string>
+    <string name="saturation">Saturation</string>
+    <string name="brightness">Brightness</string>
+    <string name="changeButtonA">Show light groups</string>
+    <string name="changeButtonB">Show individual lights</string>
+    <string name="userPromptBridge">Please press the link button.</string>
 </resources>
