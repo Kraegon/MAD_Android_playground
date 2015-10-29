@@ -1,9 +1,12 @@
 package comfycorp.hueapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Looper;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.SyncHttpClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,6 +15,9 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import cz.msebera.android.httpclient.*;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -20,8 +26,11 @@ import cz.msebera.android.httpclient.entity.StringEntity;
  * Created by Kraegon on 27/10/2015.
  */
 public class BridgeMiddleMan {
+    //Used for shared preference
+    private static final String PREFS_NAME = "comfycorp.hueapp.HueBridgePreferences";
+
     private static BridgeMiddleMan ourInstance = new BridgeMiddleMan();
-    public List<LightsChangedListener> listeners = new ArrayList<LightsChangedListener>();
+    public List<LightsChangedListener> listeners = new ArrayList<>();
 
     //Event interface & event
     interface LightsChangedListener {
@@ -30,9 +39,13 @@ public class BridgeMiddleMan {
 
     private void fireLightsChangedEvent() {
         // Notify everybody that may be interested
-        System.out.println("Doop-dee-doo");
         for (LightsChangedListener l : listeners)
             l.onLightsChangedEvent();
+    }
+
+    public enum ActionThreadType{
+        THREAD_TYPE_SYNC,
+        THREAD_TYPE_ASYNC
     }
 
     public static BridgeMiddleMan getInstance() {
@@ -40,8 +53,8 @@ public class BridgeMiddleMan {
     }
 
     public Context mContext;
-    public String username = "1f4d16f21308d5973663850e592c5c3";
-    public String bridgeIp = "192.168.1.179";
+    public String username;// = "1f4d16f21308d5973663850e592c5c3";
+    public String bridgeIp;// = "192.168.1.179";
     public ArrayList<HueLight> lightArray = new ArrayList<HueLight>();
     public ArrayList<HueLight> lightsGroupArray = new ArrayList<HueLight>();
     private String bridgeFinderUrl = "https://www.meethue.com/api/nupnp";
@@ -50,87 +63,119 @@ public class BridgeMiddleMan {
 
     }
 
-    public void findAndSetBridgeIp() {
+    public void findAndSetBridgeIp(ActionThreadType threadType) {
         System.out.println("findAndSetBridgeIp()");
-
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(bridgeFinderUrl, new JsonHttpResponseHandler() {
-
+        JsonHttpResponseHandler action = new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 // called when response HTTP status is "200 OK"
                 try {
                     System.out.println("Bridge IP found: " + response.getJSONObject(0).getString("internalipaddress"));
                     bridgeIp = response.getJSONObject(0).getString("internalipaddress");
+                    startNewUsernameRequestThread();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-        });
-
-    }
-
-    public void createUsernameHueBridge() {
-        System.out.println("createUsernameHueBridge()");
-        final StringEntity entity;
-        try {
-
-            entity = new StringEntity("{\"devicetype\":\"HueApp#ComfyCrew\"}");
+        };
+        if (ActionThreadType.THREAD_TYPE_ASYNC == threadType) {
             AsyncHttpClient client = new AsyncHttpClient();
-
-            client.post(mContext, "http://" + bridgeIp + "/api/", entity, "application/json", new JsonHttpResponseHandler() {
-
-//                @Override
-//                public void onStart() {
-//                    System.out.println(entity.toString());
-//                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    // called when response HTTP status is "200 OK"
-                    try {
-                        if( response.getJSONObject(0).toString().contains("error") )
-                            System.out.println("Please press the link button");
-                        else
-                            username = response.getJSONObject(0).getJSONObject("success")
-                                    .getString("username");
-                        System.out.println(username);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            });
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            client.get(bridgeFinderUrl, action);
+        } else {
+            SyncHttpClient client = new SyncHttpClient();
+            client.get(bridgeFinderUrl, action);
         }
     }
 
+    private void startNewUsernameRequestThread(){
+        if(username.isEmpty()) {
+            ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
+            Runnable task = new Runnable() {
+                public void run() {
+                    Looper.prepare();
+                    System.out.println("Do rerun");
+                    createUsernameHueBridge(ActionThreadType.THREAD_TYPE_SYNC);
+                }
+            };
+            worker.schedule(task, 2000, TimeUnit.MILLISECONDS);
+        } else {
+            saveBridgeSettings();
+            getAllLamps(ActionThreadType.THREAD_TYPE_SYNC);
+            getAllLampGroups(ActionThreadType.THREAD_TYPE_SYNC);
+        }
+    }
 
-    public void getAllLamps() {
+    public void createUsernameHueBridge(ActionThreadType threadType) {
+        System.out.println("createUsernameHueBridge()");
+        final StringEntity entity;
+        JsonHttpResponseHandler action =  new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                // called when response HTTP status is "200 OK"
+                try {
+                    JSONObject unwrapped = response.getJSONObject(0);
+                    try {
+                        if(unwrapped.getJSONObject("error").getInt("type") == 101) {
+                            System.out.println("Please press the link button");
+                        }
+                    } catch (JSONException e) {
+                        if(e.getMessage().equals("No value for error")) {
+                            username = response.getJSONObject(0).getJSONObject("success")
+                                    .getString("username");
+                        }
+                    }
+                } catch (JSONException e) {
+                    System.out.println("Unwanted JSON exception");
+                    e.printStackTrace();
+                }
+                startNewUsernameRequestThread(); //Exit to safe exit point
+            }
+        };
+
+        try {
+            entity = new StringEntity("{\"devicetype\":\"HueApp#ComfyCrew\"}");
+            if(ActionThreadType.THREAD_TYPE_ASYNC == threadType){
+                AsyncHttpClient client = new AsyncHttpClient();
+                client.post(mContext, "http://" + bridgeIp + "/api/", entity, "application/json", action);
+            } else {
+                SyncHttpClient client = new SyncHttpClient();
+                client.post(mContext, "http://" + bridgeIp + "/api/", entity, "application/json", action);
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void getAllLamps(ActionThreadType threadType) {
         System.out.println("getAllLamps()");
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://" + bridgeIp + "/api/" + username + "/lights/", new JsonHttpResponseHandler() {
 
+        JsonHttpResponseHandler action = new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // called when response HTTP status is "200 OK"
                 JSONArray lampIds = response.names();
                 lightArray.clear();
                 for (int i = 0; i < lampIds.length(); i++) {
-                        try {
-                            lightArray.add(
-                                    parseLampData(response.getJSONObject(lampIds.getString(i)),
-                                    Integer.parseInt(lampIds.getString(i))));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    try {
+                        lightArray.add(
+                                parseLampData(response.getJSONObject(lampIds.getString(i)),
+                                        Integer.parseInt(lampIds.getString(i))));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
                 System.out.println("Lamps gotten");
                 fireLightsChangedEvent();
             }
-        });
+        };
+        if(ActionThreadType.THREAD_TYPE_ASYNC == threadType) {
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get("http://" + bridgeIp + "/api/" + username + "/lights/", action);
+        }  else {
+            SyncHttpClient client = new SyncHttpClient();
+            client.get("http://" + bridgeIp + "/api/" + username + "/lights/", action);
+        }
     }
 
     public HueLight parseLampData(JSONObject jsonDataHue, int id) throws JSONException {
@@ -148,12 +193,10 @@ public class BridgeMiddleMan {
         return hueLight;
     }
 
-    public void getAllLampGroups() {
+    public void getAllLampGroups(ActionThreadType threadType) {
         System.out.println("getAllLampGroups()");
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://" + bridgeIp + "/api/" + username + "/groups/", new JsonHttpResponseHandler() {
-
-            @Override
+        JsonHttpResponseHandler action =  new JsonHttpResponseHandler() {
+             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // called when response HTTP status is "200 OK"
                 JSONArray lampGroupIds = response.names();
@@ -171,7 +214,14 @@ public class BridgeMiddleMan {
                 System.out.println("Lamp groups gotten");
                 fireLightsChangedEvent();
             }
-        });
+        };
+        if(ActionThreadType.THREAD_TYPE_ASYNC == threadType) {
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get("http://" + bridgeIp + "/api/" + username + "/groups/",action);
+            }  else {
+            SyncHttpClient client = new SyncHttpClient();
+            client.get("http://" + bridgeIp + "/api/" + username + "/groups/",action);
+        }
     }
 
     public HueLight parseGroupData(JSONObject jsonDataHue, int id) throws JSONException {
@@ -237,14 +287,40 @@ public class BridgeMiddleMan {
 
     public void saveBridgeSettings() {
         System.out.println("saveBridgeSettings()");
+        SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor settingsEditor = settings.edit();
+        settingsEditor.putString("bridgeIp", this.bridgeIp);
+        settingsEditor.putString("bridgeUsername", this.username);
+        settingsEditor.apply();
     }
 
-    public void loadBridgeSettings() {
+    public void loadBridgeSettings(){
         System.out.println("loadBridgeSettings()");
+        SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME, 0);
+        bridgeIp = settings.getString("bridgeIp", "");
+        username = settings.getString("bridgeUsername", "");
+        System.out.println("ALL DATA: " + settings.getAll());
+        System.out.println("Loaded: "+username+" and "+bridgeIp+".");
     }
 
     public void resetBridgeSettings() {
         System.out.println("resetBridgeSettings()");
+        SharedPreferences settings = mContext.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor settingsEditor = settings.edit();
+        settingsEditor.clear();
+        settingsEditor.commit();
     }
 
+    public void connectToBridge(){
+        loadBridgeSettings();
+        if(bridgeIp.isEmpty()) {
+            findAndSetBridgeIp(ActionThreadType.THREAD_TYPE_ASYNC);
+            System.out.println("Display getting bridge dialog");
+        } else if(username.isEmpty()) {
+            startNewUsernameRequestThread();
+            System.out.println("Display getting username dialog/request link button press");
+        } else {
+            getAllLamps(ActionThreadType.THREAD_TYPE_ASYNC);
+        }
+    }
 }

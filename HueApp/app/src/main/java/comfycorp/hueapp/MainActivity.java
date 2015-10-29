@@ -19,10 +19,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         bridgeMiddleMan.mContext = this.getApplicationContext();
         setContentView(R.layout.activity_main);
-
-        bridgeMiddleMan.getAllLamps();
-        bridgeMiddleMan.getAllLampGroups();
-
+        bridgeMiddleMan.connectToBridge();
         final ListView huelistview = (ListView) findViewById(R.id.hueListView);
 
         final HueArrayAdapter adapter = new HueArrayAdapter(getLayoutInflater());
@@ -31,7 +28,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         bridgeMiddleMan.listeners.add(new BridgeMiddleMan.LightsChangedListener() {
             @Override
             public void onLightsChangedEvent() {
-                adapter.notifyDataSetChanged();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
 
@@ -44,8 +46,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onResume () {
         super.onResume();
         if (loaded) {
-            bridgeMiddleMan.getAllLamps();
-            bridgeMiddleMan.getAllLampGroups();
+            bridgeMiddleMan.getAllLamps(BridgeMiddleMan.ActionThreadType.THREAD_TYPE_ASYNC);
+            bridgeMiddleMan.getAllLampGroups(BridgeMiddleMan.ActionThreadType.THREAD_TYPE_ASYNC);
         }
     }
 
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         i.putExtra("ISINDIVIDUALLIGHT", lampsVisible);
         startActivity(i);
     }
-
+    
     public void onClick(View v) {
         final ListView huelistview = (ListView) findViewById(R.id.hueListView);
         final Button toggleButton = (Button) findViewById(R.id.buttonViewLightGroups);
