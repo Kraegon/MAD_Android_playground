@@ -1,26 +1,20 @@
 package comfycorp.hueapp;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 
 /**
  * Created by Kraegon on 27/10/2015.
  */
 public class HueArrayAdapter extends BaseAdapter{
     LayoutInflater mInflator;
+    BridgeMiddleMan bridgeMiddleMan = BridgeMiddleMan.getInstance();
 
     public HueArrayAdapter(LayoutInflater layoutInflater) {
         this.mInflator = layoutInflater;
@@ -66,13 +60,14 @@ public class HueArrayAdapter extends BaseAdapter{
         viewHolder.isOn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                BridgeMiddleMan.getInstance().lightArray.get(position).isOn = isChecked;
+                bridgeMiddleMan.lightArray.get(position).isOn = isChecked;
                 adapter.notifyDataSetChanged(); //HAHA
+                bridgeMiddleMan.setLampState(bridgeMiddleMan.lightArray.get(position));
             }
         });
 
         // En nu de viewHolder invullen met de juiste persons
-        HueLight cellHue = BridgeMiddleMan.getInstance().lightArray.get(position);
+        HueLight cellHue = bridgeMiddleMan.lightArray.get(position);
         viewHolder.name.setText(cellHue.name);
         viewHolder.idView.setText(Integer.toString(cellHue.id));
         viewHolder.isOn.setChecked(cellHue.isOn);
