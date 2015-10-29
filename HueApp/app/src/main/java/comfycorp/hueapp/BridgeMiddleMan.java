@@ -14,6 +14,8 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -49,6 +51,7 @@ public class BridgeMiddleMan {
     }
 
     private void fireLightsChangedEvent() {
+        sortLightsAndGroups();
         // Notify everybody that may be interested
         for (LightsChangedListener l : lightsListeners)
             l.onLightsChangedEvent();
@@ -216,6 +219,21 @@ public class BridgeMiddleMan {
         }
         hueLight.brightness = jsonHueLightState.getInt("bri");
         return hueLight;
+    }
+
+    private void sortLightsAndGroups(){
+        Collections.sort(lightArray, new Comparator<HueLight>() {
+            @Override
+            public int compare(HueLight lhs, HueLight rhs) {
+                return lhs.name.compareTo(rhs.name);
+            }
+        });
+        Collections.sort(lightsGroupArray, new Comparator<HueLight>() {
+            @Override
+            public int compare(HueLight lhs, HueLight rhs) {
+                return lhs.name.compareTo(rhs.name);
+            }
+        });
     }
 
     public void getAllLampGroups(ActionThreadType threadType) {
