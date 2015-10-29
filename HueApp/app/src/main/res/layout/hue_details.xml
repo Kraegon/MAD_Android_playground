@@ -12,22 +12,40 @@
         android:layout_weight="0.25"
         android:onClick="onClickToggleOn" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Name"
-        android:id="@+id/textViewName"
-        android:layout_gravity="center_horizontal" />
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_gravity="center_horizontal">
 
-    <TextView
-        android:layout_width="30dp"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="ID"
-        android:id="@+id/textViewId"
-        android:layout_gravity="right"
-        android:autoText="false" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Name"
+            android:id="@+id/textViewName"
+            android:layout_gravity="center_horizontal"
+            android:layout_row="0"
+            android:layout_column="0" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/colorLoop"
+            android:id="@+id/textView"
+            android:layout_row="0"
+            android:layout_column="2" />
+
+        <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/colorLoop"
+            android:id="@+id/toggleButtonColourLoop"
+            android:layout_row="0"
+            android:layout_column="3"
+            android:checked="false" />
+
+    </GridLayout>
 
     <TextView
         android:layout_width="wrap_content"

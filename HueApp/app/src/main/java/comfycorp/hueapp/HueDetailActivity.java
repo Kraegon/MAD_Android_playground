@@ -41,7 +41,6 @@ public class HueDetailActivity  extends FragmentActivity implements SeekBar.OnSe
         isIndividualLight = extras.getBoolean("ISINDIVIDUALLIGHT");
 
         labelName = (TextView) findViewById(R.id.textViewName);
-        labelId = (TextView) findViewById(R.id.textViewId);
         seekBarHue = (SeekBar) findViewById(R.id.seekBarHue);
         seekBarSaturation = (SeekBar) findViewById(R.id.seekBarSat);
         seekBarBrightness = (SeekBar) findViewById(R.id.seekBarBright);
@@ -62,7 +61,6 @@ public class HueDetailActivity  extends FragmentActivity implements SeekBar.OnSe
     private void updateView() {
 
         labelName.setText(selectedHueLight.name);
-        labelId.setText(Integer.toString(selectedHueLight.id));
         seekBarHue.setProgress(selectedHueLight.hue);
         seekBarSaturation.setProgress(selectedHueLight.saturation);
         seekBarBrightness.setProgress(selectedHueLight.brightness);

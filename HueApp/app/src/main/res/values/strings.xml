@@ -6,4 +6,5 @@
     <string name="changeButtonA">Show light groups</string>
     <string name="changeButtonB">Show individual lights</string>
     <string name="userPromptBridge">Please press the link button.</string>
+    <string name="colorLoop">Colour loop</string>
 </resources>

@@ -6,4 +6,5 @@
     <string name="changeButtonA">Toon lamp groepen</string>
     <string name="changeButtonB">Toon individuele lampen</string>
     <string name="userPromptBridge">Druk op de link knop.</string>
+    <string name="colorLoop">Kleuren cyclus</string>
 </resources>
