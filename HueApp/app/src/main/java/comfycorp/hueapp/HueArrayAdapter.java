@@ -1,5 +1,6 @@
 package comfycorp.hueapp;
 
+import android.graphics.Canvas;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
