@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -48,7 +49,7 @@ public class HueGroupArrayAdapter extends BaseAdapter {
             viewHolder.name = (TextView) convertView.findViewById(R.id.HueNameView);
             viewHolder.idView = (TextView) convertView.findViewById(R.id.IDView);
             viewHolder.isOn = (Switch) convertView.findViewById(R.id.quickOnOffSwitch);
-            viewHolder.colorDisplay = (SurfaceView) convertView.findViewById(R.id.surfaceView);
+            viewHolder.colorDisplay = (ImageView) convertView.findViewById(R.id.imageViewColour);
 
             convertView.setTag(viewHolder);
 
@@ -71,7 +72,7 @@ public class HueGroupArrayAdapter extends BaseAdapter {
         viewHolder.name.setText(cellHue.name);
         viewHolder.idView.setText(Integer.toString(cellHue.id));
         viewHolder.isOn.setChecked(cellHue.isOn);
-        viewHolder.colorDisplay.setBackgroundColor(cellHue.GetColor());
+        viewHolder.colorDisplay.setColorFilter(cellHue.GetColor());
 
         return convertView;
     }
@@ -81,7 +82,7 @@ public class HueGroupArrayAdapter extends BaseAdapter {
         public TextView name;
         public TextView idView;
         public Switch isOn;
-        public SurfaceView colorDisplay; //COLOUR
+        public ImageView colorDisplay; //COLOUR
     }
 }
 

@@ -10,12 +10,11 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="HueName"
         android:id="@+id/HueNameView"
-        android:layout_marginLeft="22dp"
-        android:layout_marginStart="22dp"
-        android:layout_centerVertical="true"
         android:layout_alignTop="@+id/quickOnOffSwitch"
-        android:layout_toRightOf="@+id/surfaceView"
-        android:layout_toEndOf="@+id/surfaceView" />
+        android:layout_toRightOf="@+id/imageViewColour"
+        android:layout_toEndOf="@+id/imageViewColour"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp" />
 
     <Switch
         android:layout_width="wrap_content"
@@ -27,17 +26,6 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/IDView"
         android:layout_toStartOf="@+id/IDView" />
-
-    <SurfaceView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:id="@+id/surfaceView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:background="#000000"
-        android:focusableInTouchMode="false" />
 
     <TextView
         android:layout_width="22dp"
@@ -51,5 +39,18 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/quickOnOffSwitch" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/imageViewColour"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_action_name"
+        android:foregroundTint="#000000"
+        android:clickable="false"
+        android:tint="#000000" />
 
 </RelativeLayout>
