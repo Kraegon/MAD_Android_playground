@@ -6,6 +6,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 /**
  *
@@ -24,6 +25,7 @@ public class HueDetailActivity  extends FragmentActivity implements SeekBar.OnSe
     SeekBar seekBarBrightness;
     SurfaceView colorDisplay;
     Boolean isIndividualLight;
+    ToggleButton isColorLooping;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +47,7 @@ public class HueDetailActivity  extends FragmentActivity implements SeekBar.OnSe
         seekBarSaturation = (SeekBar) findViewById(R.id.seekBarSat);
         seekBarBrightness = (SeekBar) findViewById(R.id.seekBarBright);
         colorDisplay = (SurfaceView) findViewById(R.id.surfaceViewColor);
+        isColorLooping = (ToggleButton) findViewById(R.id.toggleButtonColourLoop);
 
         //Set seekbar listeners
         seekBarBrightness.setOnSeekBarChangeListener(this);
@@ -65,6 +68,7 @@ public class HueDetailActivity  extends FragmentActivity implements SeekBar.OnSe
         seekBarSaturation.setProgress(selectedHueLight.saturation);
         seekBarBrightness.setProgress(selectedHueLight.brightness);
         colorDisplay.setBackgroundColor(selectedHueLight.GetColor());
+        isColorLooping.setChecked(selectedHueLight.isLoopingColor);
 
     }
 

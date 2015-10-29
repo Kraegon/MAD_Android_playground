@@ -43,7 +43,8 @@
             android:id="@+id/toggleButtonColourLoop"
             android:layout_row="0"
             android:layout_column="3"
-            android:checked="false" />
+            android:checked="false"
+            android:onClick="onClickToggleColorLoop" />
 
     </GridLayout>
 

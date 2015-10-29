@@ -213,8 +213,6 @@ public class BridgeMiddleMan {
         if (jsonDataHue.getString("type").equals("Extended color light")) {
             hueLight.hue = jsonHueLightState.getInt("hue");
             hueLight.saturation = jsonHueLightState.getInt("sat");
-            hueLight.isLoopingColor =
-                    jsonHueLightState.getString("effect").compareTo("colorloop") == 0 ? true : false;
         }
         hueLight.brightness = jsonHueLightState.getInt("bri");
         return hueLight;
@@ -262,7 +260,8 @@ public class BridgeMiddleMan {
         hueLightsGroup.saturation = jsonHueLightState.getInt("sat");
         hueLightsGroup.brightness = jsonHueLightState.getInt("bri");
         hueLightsGroup.isLoopingColor =
-                jsonHueLightState.getString("effect").compareTo("colorloop") == 0 ? true : false;
+                jsonHueLightState.getString("effect").compareTo("colorloop") == 0
+                ? true : false;
         return hueLightsGroup;
     }
 
@@ -279,7 +278,7 @@ public class BridgeMiddleMan {
                 "\"bri\":" + hueLight.brightness + "," +
                 "\"sat\":" + hueLight.saturation + "," +
                 "\"hue\":" + hueLight.hue + "," +
-                "\"effect\":" + colorLoop + "}"
+                "\"effect\": \"" + colorLoop + "\"}"
             );
 
             AsyncHttpClient client = new AsyncHttpClient();
@@ -305,7 +304,7 @@ public class BridgeMiddleMan {
                 "\"bri\":" + hueLight.brightness + "," +
                 "\"sat\":" + hueLight.saturation + "," +
                 "\"hue\":" + hueLight.hue + "," +
-                "\"effect\":" + colorLoop + "}"
+                "\"effect\": \"" + colorLoop + "\"}"
             );
 
             AsyncHttpClient client = new AsyncHttpClient();
